@@ -7,5 +7,6 @@
   "minimumCoreVersion": "0.7.5",
   "scripts": [
     "scripts/rounded-measured-template.js"
-  ]
+  ],
+  "download": "https://github.com/cdverrett94/rounded-measured-templates/archive/0.1.0.zip"
 }
