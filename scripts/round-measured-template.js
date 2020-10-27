@@ -12,7 +12,15 @@ Hooks.on("preCreateMeasuredTemplate", (...args) => {
 console.log("Hello World! This code runs immediately when the file is loaded.");
 
 Hooks.on("init", function() {
-  console.log("This code runs once the Foundry VTT software begins it's initialization workflow.");
+  game.settings.register('rounded-measured-templates', 'multiple', {
+    name: "What Multiple To Use",
+    hint: "The multiple you want the measured templates to round to. ",
+    scope: 'world',
+    config: true,
+    restricted: true,
+    default: 5,
+    type: String,
+  });
 });
 
 Hooks.on("ready", function() {
