@@ -1,0 +1,11 @@
+{
+  "name": "rounded-measured-templates",
+  "title": "Rounded Measured Templates",
+  "description": "This module rounds the measured templates to the nearest multiple of 5. ",
+  "author": "shortyverrett94",
+  "version": "0.1.0",
+  "minimumCoreVersion": "0.7.5",
+  "scripts": [
+    "scripts/rounded-measured-template.js"
+  ]
+}
