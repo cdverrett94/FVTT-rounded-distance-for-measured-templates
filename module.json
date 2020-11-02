@@ -3,7 +3,7 @@
   "title": "Rounded Distance for Measured Templates",
   "description": "This module rounds the distance of your measured templates to the nearest multiple of 5. ",
   "author": "shortyverrett94",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "minimumCoreVersion": "0.7.5",
   "compatibleCoreVersion": "0.7.5",
   "scripts": [
