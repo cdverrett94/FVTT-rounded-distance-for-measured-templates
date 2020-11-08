@@ -10,6 +10,6 @@
     "scripts/rounded-distance-for-measured-templates.js"
   ],
   "url": "https://github.com/cdverrett94/rounded-distance-for-measured-templates",
-  "download": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/archive/0.1.6.zip",
+  "download": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/releases/download/0.1.6/v0.1.6.zip",
   "manifest": "https://raw.githubusercontent.com/cdverrett94/rounded-distance-for-measured-templates/main/module.json"
 }
