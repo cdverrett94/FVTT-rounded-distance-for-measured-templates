@@ -16,7 +16,7 @@ const roundToMultiple = (number, multiple) => {
   return (Math.sign(number) < 0) ? Math.min(Math.round(number / multiple) * multiple, -multiple) : Math.max(Math.round(number / multiple) * multiple, multiple);
 }
 
-Hooks.once("ready", () => {
+Hooks.on("ready", () => {
   TemplateLayer.prototype._onDragLeftMove = function(event) {
     const {
       destination,
