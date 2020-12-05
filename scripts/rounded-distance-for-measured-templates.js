@@ -12,7 +12,7 @@ Hooks.once("init", function() {
 
   game.settings.register('rounded-distance-for-measured-templates', 'angle-multiple', {
     name: "What multiple should the angle for cones and rays be rounded to?",
-    hint: "The multiple you want the measured templates distance to round to. If left blank, the measured templates will be rounded based on the scenes grid distance.",
+    hint: "The multiple you want the angle for cones and rays to snap. If left blank, there won't be any angle snapping.",
     scope: 'world',
     config: true,
     restricted: true,
