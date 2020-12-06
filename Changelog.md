@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.0
+Allowed distance snapping to steps, with an option for using distance multiple after the max step.
+
 ## 0.3.0
 Added angle snapping for cones and rays
 

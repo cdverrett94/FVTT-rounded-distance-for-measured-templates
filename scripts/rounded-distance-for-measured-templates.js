@@ -7,7 +7,7 @@ Hooks.once("init", function() {
     config: true,
     restricted: true,
     default: "",
-    type: String,
+    type: String
   });
 
   game.settings.register('rounded-distance-for-measured-templates', 'angle-multiple', {
@@ -17,7 +17,37 @@ Hooks.once("init", function() {
     config: true,
     restricted: true,
     default: "",
-    type: String,
+    type: String
+  });
+
+  game.settings.register('rounded-distance-for-measured-templates', 'use-steps', {
+    name: "Should the distances be rounded by steps instead of a single value?",
+    hint: "If set to yes, given a step array of '1, 5, 10, 20, 50', the rounded disatnce would start at 1, then round to 5, then round to 10, etc.",
+    scope: 'world',
+    config: true,
+    restricted: true,
+    default: false,
+    type: Boolean
+  });
+
+  game.settings.register('rounded-distance-for-measured-templates', 'step-array', {
+    name: "What array of steps do you want to use?",
+    hint: "Put the steps you want separated by a comma. Example: 1, 5, 10, 20, 50",
+    scope: 'world',
+    config: true,
+    restricted: true,
+    default: "1, 5, 10, 20, 50",
+    type: String
+  });
+
+  game.settings.register('rounded-distance-for-measured-templates', 'use-multiple-after-steps', {
+    name: "After all steps are used, should the distances to default to round to the nearest multiple?",
+    hint: "",
+    scope: 'world',
+    config: true,
+    restricted: true,
+    default: false,
+    type: Boolean
   });
 });
 
@@ -25,6 +55,30 @@ Hooks.once("init", function() {
 const roundToMultiple = (number, multiple, minimum) => {
   return (Math.sign(number) < 0) ? Math.min(Math.round(number / multiple) * multiple, -minimum) : Math.max(Math.round(number / multiple) * multiple, minimum);
 }
+
+const roundToStep = (array, number, multiple, increase_after_step) => {
+  console.log(array, increase_after_step, number);
+  if (number < 0) array = array.map(x => -x).sort((first, second) => (second - first));
+  if (((number >= array[array.length - 1] && number >= 0) || (number <= array[array.length - 1] && number < 0)) && increase_after_step) {
+    return roundToMultiple(number, multiple, array[array.length - 1]);
+  } else {
+    let closest = 0;
+    closest = array.reduce(function(prev, curr) {
+      return (Math.abs(curr - number) < Math.abs(prev - number) ? curr : prev);
+    });
+
+    console.log(array, increase_after_step, number, closest);
+    return closest;
+  }
+}
+
+const roundDistance = (use_steps, number, multiple, minimum, array, increase_after_step) => {
+  if (use_steps) {
+    return roundToStep(array, number, multiple, increase_after_step);
+  } else {
+    return roundToMultiple(number, multiple, minimum);
+  }
+};
 
 Hooks.on("ready", () => {
   TemplateLayer.prototype._onDragLeftMove = function(event) {
@@ -44,13 +98,17 @@ Hooks.on("ready", () => {
 
 
     // Start amended code to round distances
-    let distanceMultiple = game.settings.get('rounded-distance-for-measured-templates', 'distance-multiple') || canvas.scene.data.gridDistance;
-    let angleMultiple = game.settings.get('rounded-distance-for-measured-templates', 'angle-multiple');
+    let distanceMultiple = game.settings.get('rounded-distance-for-measured-templates', 'distance-multiple') || canvas.scene.data.gridDistance; // distance multiple from settings. defaults to grid distance
+    let angleMultiple = game.settings.get('rounded-distance-for-measured-templates', 'angle-multiple'); // multiple to snap angles for cones and rays
+    let useSteps = game.settings.get('rounded-distance-for-measured-templates', 'use-steps'); // use stepped distance multiples
+    let stepArray = game.settings.get('rounded-distance-for-measured-templates', 'step-array').split(",").map(x => parseInt(x) * ratio).sort((first, second) => (first - second)); // steps array converted to integers and converted to pixels and sorted
+    let useMultiplesAfterSteps = game.settings.get('rounded-distance-for-measured-templates', 'use-multiple-after-steps'); // use distanceMultiple after reaching highest integer from stepArray
 
     if (preview.data.t === "rect") { // if measured template is a rectangle.
       // round width and height to nearest multiple.
-      ray.dx = roundToMultiple(ray.dx, ratio * distanceMultiple, distanceMultiple);
-      ray.dy = roundToMultiple(ray.dy, ratio * distanceMultiple, distanceMultiple);
+
+      ray.dx = roundDistance(useSteps, ray.dx, ratio * distanceMultiple, ratio * distanceMultiple, stepArray, useMultiplesAfterSteps);
+      ray.dy = roundDistance(useSteps, ray.dy, ratio * distanceMultiple, ratio * distanceMultiple, stepArray, useMultiplesAfterSteps);
 
       // set new ray distance based on updated width and height values
       ray.distance = Math.hypot(ray.dx, ray.dy);
@@ -64,7 +122,7 @@ Hooks.on("ready", () => {
         ray.angle = Math.atan(ray.dy / ray.dx);
       }
     } else { // if measured template is anything other than a rectangle.
-      ray.distance = roundToMultiple(ray.distance, ratio * distanceMultiple, ratio * distanceMultiple);
+      ray.distance = roundDistance(useSteps, ray.distance, ratio * distanceMultiple, ratio * distanceMultiple, stepArray, useMultiplesAfterSteps);
     }
 
     // round angles to nearest angleMultiple for cones and rays

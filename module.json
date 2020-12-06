@@ -3,14 +3,14 @@
   "title": "Rounded Distance for Measured Templates",
   "description": "This module rounds the distance of a measured template to the nearest multiple. By default it rounds the distance to the nearest multiple of the grid distance, but can be changed in the settings.",
   "author": "shortyverrett94 - shortyverrett94#4531",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "minimumCoreVersion": "0.7.5",
   "compatibleCoreVersion": "0.7.8",
   "scripts": [
     "scripts/rounded-distance-for-measured-templates.js"
   ],
   "url": "https://github.com/cdverrett94/rounded-distance-for-measured-templates",
-  "download": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/releases/download/0.3.0/v0.3.0.zip",
+  "download": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/releases/download/0.4.0/v0.4.0.zip",
   "manifest": "https://raw.githubusercontent.com/cdverrett94/rounded-distance-for-measured-templates/main/module.json",
   "bugs": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/issues"
 }
