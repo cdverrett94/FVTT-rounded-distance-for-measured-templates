@@ -1,3 +1,75 @@
+let roundedDistanceSettings = {}; // set empty object; gets populated during "ready" Hook
+
+// updates the variables used in the script; used to set the settings on settings change, scene change, and ready.
+const updateRoundedDistanceSettings = () => {
+    roundedDistanceSettings = {
+        "distance-multiple": ((game.settings.get('rounded-distance-for-measured-templates', 'distance-multiple')) ? parseInt(game.settings.get('rounded-distance-for-measured-templates', 'distance-multiple')) : canvas.scene.data.gridDistance) * (canvas.dimensions.size / canvas.dimensions.distance), // distance multiple from settings. defaults to grid distance
+        "angle-multiple": (game.settings.get('rounded-distance-for-measured-templates', 'angle-multiple')) ? parseInt(game.settings.get('rounded-distance-for-measured-templates', 'angle-multiple')) : false, // multiple to snap angles for cones and rays
+        "use-steps": game.settings.get('rounded-distance-for-measured-templates', 'use-steps'), // use stepped distance multiples
+        "positive-steps-array": game.settings.get('rounded-distance-for-measured-templates', 'step-array').split(",").map(x => parseInt(x) * (canvas.dimensions.size / canvas.dimensions.distance)).sort((first, second) => (first - second)), // steps array converted to integers and converted to pixels and sorted
+        "negative-steps-array": game.settings.get('rounded-distance-for-measured-templates', 'step-array').split(",").map(x => parseInt(x) * (canvas.dimensions.size / canvas.dimensions.distance) * -1).sort((first, second) => (second - first)), // steps array converted to integers and converted to pixels and sorted
+        "use-multiple-after-steps": game.settings.get('rounded-distance-for-measured-templates', 'use-multiple-after-steps') // use  roundedDistanceSettings["distance-multiple"] after reaching highest integer from stepArray
+    }
+    console.log(roundedDistanceSettings);
+}
+
+/*
+  Round a number to the nearest multiple 
+
+  number - current distance number before rounding
+  multiple - what multiple to round to
+  minimum - minimum number to round to - prevents distance from being 0
+*/
+const roundToMultiple = (number, multiple, minimum) => {
+    return (number < 0) ? Math.min(Math.round(number / multiple) * multiple, -minimum) : Math.max(Math.round(number / multiple) * multiple, minimum);
+}
+
+
+/*
+  Rounds a number to the nearest step in the array
+
+  array - array of steps 
+  number - current distance number before rounding
+  multiple - what multiple to round to
+  increase_after_step - if using stepped rounding, should the rounding stop (false) or go to default rounding (true) 
+
+*/
+const roundToStep = (number) => {
+    let array = (number < 0) ? roundedDistanceSettings["negative-steps-array"] : roundedDistanceSettings["positive-steps-array"];
+    if (((number >= array[array.length - 1] && number >= 0) || (number <= array[array.length - 1] && number < 0)) && roundedDistanceSettings["use-multiple-after-steps"]) { // check if number is >= (<=) last index if number is postive (negative) and if increase_after_step is true
+        return roundToMultiple(number, roundedDistanceSettings["distance-multiple"], array[array.length - 1]);
+    } else {
+        let closest = 0;
+        closest = array.reduce(function(prev, curr) {
+            return (Math.abs(curr - number) < Math.abs(prev - number) ? curr : prev);
+        });
+        return closest;
+    }
+}
+
+
+/*
+  Choose which rounding method to use based on setting
+  
+  use_steps - should the rounding be based on steps - set in the module settings
+  number - current distance number before rounding
+  multiple - what multiple to round to
+  array - array of steps 
+  increase_after_step - if using stepped rounding, should the rounding stop (false) or go to default rounding (true) 
+
+*/
+const roundDistance = (use_steps, number) => {
+    if (use_steps) {
+        return roundToStep(number);
+    } else {
+        return roundToMultiple(number, roundedDistanceSettings["distance-multiple"], roundedDistanceSettings["distance-multiple"]);
+    }
+};
+
+
+Hooks.on("closeSettingsConfig", updateRoundedDistanceSettings);
+Hooks.on("canvasInit", updateRoundedDistanceSettings);
+
 // register module settings for multiple to round to
 Hooks.once("init", function() {
     game.settings.register('rounded-distance-for-measured-templates', 'distance-multiple', {
@@ -51,64 +123,9 @@ Hooks.once("init", function() {
     });
 });
 
-
-
-/*
-  Round a number to the nearest multiple 
-
-  number - current distance number before rounding
-  multiple - what multiple to round to
-  minimum - minimum number to round to - prevents distance from being 0
-*/
-const roundToMultiple = (number, multiple, minimum) => {
-    return (Math.sign(number) < 0) ? Math.min(Math.round(number / multiple) * multiple, -minimum) : Math.max(Math.round(number / multiple) * multiple, minimum);
-}
-
-
-/*
-  Rounds a number to the nearest step in the arry and 
-
-  array - array of steps 
-  number - current distance number before rounding
-  multiple - what multiple to round to
-  increase_after_step - if using stepped rounding, should the rounding stop (false) or go to default rounding (true) 
-
-*/
-const roundToStep = (array, number, multiple, increase_after_step) => {
-    if (number < 0) array = array.map(x => -x).sort((first, second) => (second - first)); // if number is negative set each item in array to negative version of itself and reverse sort
-    if (((number >= array[array.length - 1] && number >= 0) || (number <= array[array.length - 1] && number < 0)) && increase_after_step) { // check if number is >= (<=) last index if number is postive (negative) and if increase_after_step is true
-        return roundToMultiple(number, multiple, array[array.length - 1]);
-    } else {
-        let closest = 0;
-        closest = array.reduce(function(prev, curr) {
-            return (Math.abs(curr - number) < Math.abs(prev - number) ? curr : prev);
-        });
-
-        console.log(array, increase_after_step, number, closest);
-        return closest;
-    }
-}
-
-
-/*
-  Choose which rounding method to use based on setting
-  
-  use_steps - should the rounding be based on steps - set in the module settings
-  number - current distance number before rounding
-  multiple - what multiple to round to
-  array - array of steps 
-  increase_after_step - if using stepped rounding, should the rounding stop (false) or go to default rounding (true) 
-
-*/
-const roundDistance = (use_steps, number, multiple, minimum, array, increase_after_step) => {
-    if (use_steps) {
-        return roundToStep(array, number, multiple, increase_after_step);
-    } else {
-        return roundToMultiple(number, multiple, minimum);
-    }
-};
-
 Hooks.on("ready", () => {
+    updateRoundedDistanceSettings();
+
     TemplateLayer.prototype._onDragLeftMove = function(event) {
         const {
             destination,
@@ -126,38 +143,35 @@ Hooks.on("ready", () => {
 
 
         // Start amended code to round distances
-        let distanceMultiple = game.settings.get('rounded-distance-for-measured-templates', 'distance-multiple') || canvas.scene.data.gridDistance; // distance multiple from settings. defaults to grid distance
-        let angleMultiple = game.settings.get('rounded-distance-for-measured-templates', 'angle-multiple'); // multiple to snap angles for cones and rays
-        let useSteps = game.settings.get('rounded-distance-for-measured-templates', 'use-steps'); // use stepped distance multiples
-        let stepArray = game.settings.get('rounded-distance-for-measured-templates', 'step-array').split(",").map(x => parseInt(x) * ratio).sort((first, second) => (first - second)); // steps array converted to integers and converted to pixels and sorted
-        let useMultiplesAfterSteps = game.settings.get('rounded-distance-for-measured-templates', 'use-multiple-after-steps'); // use distanceMultiple after reaching highest integer from stepArray
+        try {
+            if (preview.data.t === "rect") { // if measured template is a rectangle.
+                // round width and height to nearest multiple.
 
-        if (preview.data.t === "rect") { // if measured template is a rectangle.
-            // round width and height to nearest multiple.
+                ray.dx = roundDistance(roundedDistanceSettings["use-steps"], ray.dx);
+                ray.dy = roundDistance(roundedDistanceSettings["use-steps"], ray.dy);
 
-            ray.dx = roundDistance(useSteps, ray.dx, ratio * distanceMultiple, ratio * distanceMultiple, stepArray, useMultiplesAfterSteps);
-            ray.dy = roundDistance(useSteps, ray.dy, ratio * distanceMultiple, ratio * distanceMultiple, stepArray, useMultiplesAfterSteps);
+                // set new ray distance based on updated width and height values
+                ray.distance = Math.hypot(ray.dx, ray.dy);
 
-            // set new ray distance based on updated width and height values
-            ray.distance = Math.hypot(ray.dx, ray.dy);
-
-            // when the width is a negative value (to the left of the origin point), foundry shows the angle becomes >90 or <-90, so have to add those values back to the angles as they get set to to <90 and >-90 based on calculatin angle of a square
-            if (ray.dx < 0 & ray.dy > 0) { // if creating to the bottom left of start point
-                ray.angle = toRadians(90) - Math.atan(ray.dx / ray.dy);
-            } else if (ray.dx < 0 && ray.dy < 0) { // if creating to the top left of start point
-                ray.angle = toRadians(-90) - Math.atan(ray.dx / ray.dy);
-            } else { // if creating to the right of the start point
-                ray.angle = Math.atan(ray.dy / ray.dx);
+                // when the width is a negative value (to the left of the origin point), foundry shows the angle becomes >90 or <-90, so have to add those values back to the angles as they get set to to <90 and >-90 based on calculatin angle of a square
+                if (ray.dx < 0 & ray.dy > 0) { // if creating to the bottom left of start point
+                    ray.angle = toRadians(90) - Math.atan(ray.dx / ray.dy);
+                } else if (ray.dx < 0 && ray.dy < 0) { // if creating to the top left of start point
+                    ray.angle = toRadians(-90) - Math.atan(ray.dx / ray.dy);
+                } else { // if creating to the right of the start point
+                    ray.angle = Math.atan(ray.dy / ray.dx);
+                }
+            } else { // if measured template is anything other than a rectangle.
+                ray.distance = roundDistance(roundedDistanceSettings["use-steps"], ray.distance, ratio * roundedDistanceSettings["distance-multiple"], ratio * roundedDistanceSettings["distance-multiple"]);
             }
-        } else { // if measured template is anything other than a rectangle.
-            ray.distance = roundDistance(useSteps, ray.distance, ratio * distanceMultiple, ratio * distanceMultiple, stepArray, useMultiplesAfterSteps);
-        }
 
-        // round angles to nearest angleMultiple for cones and rays
-        if ((preview.data.t === "cone" || preview.data.t === "ray") && angleMultiple) {
-            // round angle
-            ray.angle = toRadians(roundToMultiple(toDegrees(ray.angle), angleMultiple, 0));
-        }
+
+            // round angles to nearest  roundedDistanceSettings["angle-multiple"] for cones and rays
+            if ((preview.data.t === "cone" || preview.data.t === "ray") && roundedDistanceSettings["angle-multiple"]) {
+                // round angle
+                ray.angle = toRadians(roundToMultiple(toDegrees(ray.angle), roundedDistanceSettings["angle-multiple"], 0));
+            }
+        } catch (error) { console.error(`Rounded Distance for Measured Templates: ${error.message}`); }
         // End amended code to round distances
 
 

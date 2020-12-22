@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1
+Refactored code to be faster during dragging out the measured template
+Added try/catch for error handling, so that if there's an error for some reason, base functionality is maintained.
+Updated compatibleCoreVersion to FVTT 0.7.9
+
 ## 0.4.0
 Allowed distance snapping to steps, with an option for using distance multiple after the max step.
 
