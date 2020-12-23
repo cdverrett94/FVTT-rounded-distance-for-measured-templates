@@ -68,7 +68,6 @@ const roundDistance = (use_steps, number) => {
 
 
 Hooks.on("closeSettingsConfig", updateRoundedDistanceSettings);
-Hooks.on("closeSceneConfig", updateRoundedDistanceSettings);
 Hooks.on("canvasInit", updateRoundedDistanceSettings);
 
 // register module settings for multiple to round to
