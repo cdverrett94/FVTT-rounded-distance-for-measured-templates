@@ -10,7 +10,6 @@ const updateRoundedDistanceSettings = () => {
         "negative-steps-array": game.settings.get('rounded-distance-for-measured-templates', 'step-array').split(",").map(x => parseInt(x) * (canvas.dimensions.size / canvas.dimensions.distance) * -1).sort((first, second) => (second - first)), // steps array converted to integers and converted to pixels and sorted
         "use-multiple-after-steps": game.settings.get('rounded-distance-for-measured-templates', 'use-multiple-after-steps') // use  roundedDistanceSettings["distance-multiple"] after reaching highest integer from stepArray
     }
-    console.log(roundedDistanceSettings);
 }
 
 /*
