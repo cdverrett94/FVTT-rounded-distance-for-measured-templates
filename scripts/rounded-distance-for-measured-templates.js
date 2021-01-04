@@ -125,7 +125,7 @@ Hooks.once("init", function() {
 Hooks.on("ready", () => {
     updateRoundedDistanceSettings();
 
-    TemplateLayer.prototype._onDragLeftMove = function(event) {
+    const onDragLeftMove = function(event) {
         const {
             destination,
             createState,
@@ -181,4 +181,10 @@ Hooks.on("ready", () => {
         // Confirm the creation state
         event.data.createState = 2;
     };
+
+    if (game.modules.get("lib-wrapper")?.active) {
+        libWrapper.register("rounded-distance-for-measured-templates", "TemplateLayer.prototype._onDragLeftMove", onDragLeftMove, "OVERRIDE");
+    } else {
+        TemplateLayer.prototype._onDragLeftMove = onDragLeftMove;
+    }
 });
