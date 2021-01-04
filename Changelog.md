@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.2
+Add libWrapper support by dev7355608
+
 ## 0.4.1
 Refactored code to be faster during dragging out the measured template
 Added try/catch for error handling, so that if there's an error for some reason, base functionality is maintained.
