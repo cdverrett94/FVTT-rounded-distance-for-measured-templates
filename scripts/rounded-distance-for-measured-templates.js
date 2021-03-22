@@ -2,6 +2,7 @@ let roundedDistanceSettings = {}; // set empty object; gets populated during "re
 
 // updates the variables used in the script; used to set the settings on settings change, scene change, and ready.
 const updateRoundedDistanceSettings = () => {
+    console.log('hi');
     roundedDistanceSettings = {
         "distance-multiple": ((game.settings.get('rounded-distance-for-measured-templates', 'distance-multiple')) ? parseInt(game.settings.get('rounded-distance-for-measured-templates', 'distance-multiple')) : canvas.scene.data.gridDistance) * (canvas.dimensions.size / canvas.dimensions.distance), // distance multiple from settings. defaults to grid distance
         "angle-multiple": (game.settings.get('rounded-distance-for-measured-templates', 'angle-multiple')) ? parseInt(game.settings.get('rounded-distance-for-measured-templates', 'angle-multiple')) : false, // multiple to snap angles for cones and rays
@@ -143,45 +144,35 @@ Hooks.on("ready", () => {
 
         // Start amended code to round distances
         try {
-            if (preview.data.t === "rect") { // if measured template is a rectangle.
+            if (preview.data.t === "rect") { // for rectangles
                 // round width and height to nearest multiple.
-
                 ray.dx = roundDistance(roundedDistanceSettings["use-steps"], ray.dx);
                 ray.dy = roundDistance(roundedDistanceSettings["use-steps"], ray.dy);
 
-                // set new ray distance based on updated width and height values
-                ray.distance = Math.hypot(ray.dx, ray.dy);
-
-                // when the width is a negative value (to the left of the origin point), foundry shows the angle becomes >90 or <-90, so have to add those values back to the angles as they get set to to <90 and >-90 based on calculatin angle of a square
-                if (ray.dx < 0 & ray.dy > 0) { // if creating to the bottom left of start point
-                    ray.angle = toRadians(90) - Math.atan(ray.dx / ray.dy);
-                } else if (ray.dx < 0 && ray.dy < 0) { // if creating to the top left of start point
-                    ray.angle = toRadians(-90) - Math.atan(ray.dx / ray.dy);
-                } else { // if creating to the right of the start point
-                    ray.angle = Math.atan(ray.dy / ray.dx);
-                }
-            } else { // if measured template is anything other than a rectangle.
-                ray.distance = roundDistance(roundedDistanceSettings["use-steps"], ray.distance, ratio * roundedDistanceSettings["distance-multiple"], ratio * roundedDistanceSettings["distance-multiple"]);
+            } else { // for circles, cones, and rays
+                ray._distance = roundDistance(roundedDistanceSettings["use-steps"], ray.distance, ratio * roundedDistanceSettings["distance-multiple"], ratio * roundedDistanceSettings["distance-multiple"]);
             }
+            console.log(preview.data.t, roundedDistanceSettings["angle-multiple"]);
 
-
-            // round angles to nearest  roundedDistanceSettings["angle-multiple"] for cones and rays
+            // round angles for cones and rays
             if ((preview.data.t === "cone" || preview.data.t === "ray") && roundedDistanceSettings["angle-multiple"]) {
                 // round angle
-                ray.angle = toRadians(roundToMultiple(toDegrees(ray.angle), roundedDistanceSettings["angle-multiple"], 0));
+                ray._angle = Math.toRadians(roundToMultiple(Math.toDegrees(ray.angle), roundedDistanceSettings["angle-multiple"], 0));
+
             }
         } catch (error) { console.error(`Rounded Distance for Measured Templates: ${error.message}`); }
         // End amended code to round distances
 
 
-        // Update the preview object
-        preview.data.direction = toDegrees(ray.angle);
+         // Update the preview object
+        preview.data.direction = Math.normalizeDegrees(Math.toDegrees(ray.angle));
         preview.data.distance = ray.distance / ratio;
         preview.refresh();
         // Confirm the creation state
         event.data.createState = 2;
     };
 
+    // use libWrapper to wrap method if available
     if (game.modules.get("lib-wrapper")?.active) {
         libWrapper.register("rounded-distance-for-measured-templates", "TemplateLayer.prototype._onDragLeftMove", onDragLeftMove, "OVERRIDE");
     } else {

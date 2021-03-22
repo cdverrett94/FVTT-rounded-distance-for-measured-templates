@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.3
+Support for FoundryVTT 0.8.0
+
 ## 0.4.2
 Add libWrapper support by dev7355608
 
