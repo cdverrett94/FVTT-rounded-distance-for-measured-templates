@@ -5,7 +5,8 @@ const updateRoundedDistanceSettings = () => {
     console.log('hi');
     roundedDistanceSettings = {
         "distance-multiple": ((game.settings.get('rounded-distance-for-measured-templates', 'distance-multiple')) ? parseInt(game.settings.get('rounded-distance-for-measured-templates', 'distance-multiple')) : canvas.scene.data.gridDistance) * (canvas.dimensions.size / canvas.dimensions.distance), // distance multiple from settings. defaults to grid distance
-        "angle-multiple": (game.settings.get('rounded-distance-for-measured-templates', 'angle-multiple')) ? parseInt(game.settings.get('rounded-distance-for-measured-templates', 'angle-multiple')) : false, // multiple to snap angles for cones and rays
+        "cone-angle-multiple": (game.settings.get('rounded-distance-for-measured-templates', 'cone-angle-multiple')) ? parseInt(game.settings.get('rounded-distance-for-measured-templates', 'cone-angle-multiple')) : false, // multiple to snap angles for cones
+        "ray-angle-multiple": (game.settings.get('rounded-distance-for-measured-templates', 'ray-angle-multiple')) ? parseInt(game.settings.get('rounded-distance-for-measured-templates', 'ray-angle-multiple')) : false, // multiple to snap angles for rays
         "use-steps": game.settings.get('rounded-distance-for-measured-templates', 'use-steps'), // use stepped distance multiples
         "positive-steps-array": game.settings.get('rounded-distance-for-measured-templates', 'step-array').split(",").map(x => parseInt(x) * (canvas.dimensions.size / canvas.dimensions.distance)).sort((first, second) => (first - second)), // steps array converted to integers and converted to pixels and sorted
         "negative-steps-array": game.settings.get('rounded-distance-for-measured-templates', 'step-array').split(",").map(x => parseInt(x) * (canvas.dimensions.size / canvas.dimensions.distance) * -1).sort((first, second) => (second - first)), // steps array converted to integers and converted to pixels and sorted
@@ -82,9 +83,19 @@ Hooks.once("init", function() {
         type: String
     });
 
-    game.settings.register('rounded-distance-for-measured-templates', 'angle-multiple', {
-        name: "What multiple should the angle for cones and rays be rounded to?",
-        hint: "The multiple you want the angle for cones and rays to snap. If left blank, there won't be any angle snapping.",
+    game.settings.register('rounded-distance-for-measured-templates', 'cone-angle-multiple', {
+        name: "What multiple should the angle for rotating cones be rounded to?",
+        hint: "The multiple you want the angle for cones to snap when rotating. If left blank, there won't be any angle snapping.",
+        scope: 'world',
+        config: true,
+        restricted: true,
+        default: "",
+        type: String
+    });
+
+    game.settings.register('rounded-distance-for-measured-templates', 'ray-angle-multiple', {
+        name: "What multiple should the angle for rotating rays be rounded to?",
+        hint: "The multiple you want the angle for rays to snap when rotating. If left blank, there won't be any angle snapping.",
         scope: 'world',
         config: true,
         restricted: true,
@@ -152,12 +163,17 @@ Hooks.on("ready", () => {
             } else { // for circles, cones, and rays
                 ray._distance = roundDistance(roundedDistanceSettings["use-steps"], ray.distance, ratio * roundedDistanceSettings["distance-multiple"], ratio * roundedDistanceSettings["distance-multiple"]);
             }
-            console.log(preview.data.t, roundedDistanceSettings["angle-multiple"]);
 
             // round angles for cones and rays
-            if ((preview.data.t === "cone" || preview.data.t === "ray") && roundedDistanceSettings["angle-multiple"]) {
+            if (preview.data.t === "cone" && roundedDistanceSettings["cone-angle-multiple"]) {
                 // round angle
-                ray._angle = Math.toRadians(roundToMultiple(Math.toDegrees(ray.angle), roundedDistanceSettings["angle-multiple"], 0));
+                ray._angle = Math.toRadians(roundToMultiple(Math.toDegrees(ray.angle), roundedDistanceSettings["cone-angle-multiple"], 0));
+
+            }
+
+            if (preview.data.t === "ray" && roundedDistanceSettings["ray-angle-multiple"]) {
+                // round angle
+                ray._angle = Math.toRadians(roundToMultiple(Math.toDegrees(ray.angle), roundedDistanceSettings["ray-angle-multiple"], 0));
 
             }
         } catch (error) { console.error(`Rounded Distance for Measured Templates: ${error.message}`); }
