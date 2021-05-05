@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.4
+Separated angle snapping for cones and rays into different settings.
+
 ## 0.4.3
 Support for FoundryVTT 0.8.0
 

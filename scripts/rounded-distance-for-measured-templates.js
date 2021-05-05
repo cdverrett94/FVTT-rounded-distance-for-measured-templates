@@ -2,7 +2,6 @@ let roundedDistanceSettings = {}; // set empty object; gets populated during "re
 
 // updates the variables used in the script; used to set the settings on settings change, scene change, and ready.
 const updateRoundedDistanceSettings = () => {
-    console.log('hi');
     roundedDistanceSettings = {
         "distance-multiple": ((game.settings.get('rounded-distance-for-measured-templates', 'distance-multiple')) ? parseInt(game.settings.get('rounded-distance-for-measured-templates', 'distance-multiple')) : canvas.scene.data.gridDistance) * (canvas.dimensions.size / canvas.dimensions.distance), // distance multiple from settings. defaults to grid distance
         "cone-angle-multiple": (game.settings.get('rounded-distance-for-measured-templates', 'cone-angle-multiple')) ? parseInt(game.settings.get('rounded-distance-for-measured-templates', 'cone-angle-multiple')) : false, // multiple to snap angles for cones
@@ -170,7 +169,6 @@ Hooks.on("ready", () => {
                 ray._angle = Math.toRadians(roundToMultiple(Math.toDegrees(ray.angle), roundedDistanceSettings["cone-angle-multiple"], 0));
 
             }
-
             if (preview.data.t === "ray" && roundedDistanceSettings["ray-angle-multiple"]) {
                 // round angle
                 ray._angle = Math.toRadians(roundToMultiple(Math.toDegrees(ray.angle), roundedDistanceSettings["ray-angle-multiple"], 0));
