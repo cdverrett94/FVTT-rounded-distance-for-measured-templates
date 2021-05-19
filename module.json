@@ -1,17 +1,17 @@
 {
-    "name": "rounded-distance-for-measured-templates",
-    "title": "Rounded Distance for Measured Templates",
-    "description": "Rounds the distance of your measured templates the nearest multiple while you are drawing them. By default it rounds to nearest grid space.",
-    "author": "shortyverrett94 - shortyverrett94#4531",
-    "version": "0.5.1",
-    "minimumCoreVersion": "0.8.0",
-    "compatibleCoreVersion": "0.8.4",
-    "scripts": [
-        "scripts/register-settings.js",
-        "scripts/rounded-distance-for-measured-templates.js"
-    ],
-    "url": "https://github.com/cdverrett94/rounded-distance-for-measured-templates",
-    "download": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/releases/download/0.5.1/package.zip",
-    "manifest": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/releases/download/0.5.1/module.json",
-    "bugs": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/issues"
+  "name": "rounded-distance-for-measured-templates",
+  "title": "Rounded Distance for Measured Templates",
+  "description": "Rounds the distance of your measured templates the nearest multiple while you are drawing them. By default it rounds to nearest grid space.",
+  "author": "shortyverrett94 - shortyverrett94#4531",
+  "url": "https://github.com/cdverrett94/rounded-distance-for-measured-templates",
+  "bugs": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/issues",
+  "version": "0.5.1",
+  "minimumCoreVersion": "0.8.0",
+  "compatibleCoreVersion": "0.8.4",
+  "scripts": [
+    "scripts/register-settings.js",
+    "scripts/rounded-distance-for-measured-templates.js"
+  ],
+  "manifest": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/releases/download/0.5.1/module.zip",
+  "download": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/releases/download/0.5.1/package.zip"
 }
