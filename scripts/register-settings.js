@@ -6,7 +6,7 @@ Hooks.once("init", function() {
         config: true,
         restricted: true,
         default: "",
-        type: String
+        type: Number
     });
 
     game.settings.register('rounded-distance-for-measured-templates', 'cone-angle-multiple', {
