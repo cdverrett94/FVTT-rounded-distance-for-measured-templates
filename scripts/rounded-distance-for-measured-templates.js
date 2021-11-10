@@ -66,5 +66,5 @@ Hooks.on("closeSettingsConfig", Settings.updateSettings);
 Hooks.on("canvasInit", Settings.updateSettings);
 
 Hooks.on("libWrapper.Ready", () => {
-  libWrapper.register("rounded-distance-for-measured-templates", "TemplateLayer.prototype._onDragLeftMove", onDragLeftMove, "OVERRIDE");
+  libWrapper.register(MODULE_NAME, "TemplateLayer.prototype._onDragLeftMove", onDragLeftMove, "OVERRIDE");
 });
