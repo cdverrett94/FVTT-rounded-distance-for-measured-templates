@@ -1,9 +1,9 @@
 # Changelog
 
-## 0.5.1
+## 1.5.2
 Put settings registration in different file.
 Update readme to include features added in prior versions.
-Update compatibleCoreVersion to 0.8.4
+Update compatibleCoreVersion to V9
 Make libWrapper required dependency
 
 ## 0.5.0
