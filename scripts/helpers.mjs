@@ -1,6 +1,4 @@
-import {
-  Settings
-} from './settings.mjs'
+import { Settings } from './settings.mjs'
 
 export const MODULE_NAME = 'rounded-distance-for-measured-templates';
 

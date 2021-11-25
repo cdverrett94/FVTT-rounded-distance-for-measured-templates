@@ -1,9 +1,10 @@
 # Changelog
 
-## 0.5.1 
+## 0.5.1
 Put settings registration in different file.
 Update readme to include features added in prior versions.
 Update compatibleCoreVersion to 0.8.4
+Make libWrapper required dependency
 
 ## 0.5.0
 Separated angle snapping for cones and rays into different settings.

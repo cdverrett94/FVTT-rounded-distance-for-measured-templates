@@ -1,6 +1,4 @@
-import {
-  MODULE_NAME
-} from './helpers.mjs';
+import { MODULE_NAME } from './helpers.mjs';
 
 
 export class Settings {

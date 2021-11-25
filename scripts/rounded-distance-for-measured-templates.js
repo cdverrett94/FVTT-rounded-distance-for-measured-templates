@@ -1,12 +1,5 @@
-import {
-  MODULE_NAME,
-  roundDistance,
-  roundToMultiple
-} from './helpers.mjs';
-import {
-  Settings
-}
-from './settings.mjs';
+import { MODULE_NAME, roundDistance, roundToMultiple } from './helpers.mjs';
+import { Settings } from './settings.mjs';
 
 
 const onDragLeftMove = function(event) {

@@ -5,7 +5,7 @@
   "author": "shortyverrett94",
   "url": "https://github.com/cdverrett94/rounded-distance-for-measured-templates",
   "bugs": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/issues",
-  "version": "5.1",
+  "version": "1.5.2",
   "minimumCoreVersion": "0.8.0",
   "compatibleCoreVersion": "9",
   "esmodules": ["scripts/rounded-distance-for-measured-templates.js"],
