@@ -5,7 +5,6 @@ export class Settings {
   static moduleSettings = {}
 
   static registerSettings() {
-    console.log('register settings');
     game.settings.register(
       MODULE_NAME,
       'distance-multiple', {
@@ -86,9 +85,7 @@ export class Settings {
   }
 
   static updateSettings() {
-    console.log('update settings')
     let distanceRatio = canvas.dimensions.size / canvas.dimensions.distance;
-    console.log(game.settings.get(MODULE_NAME, 'distance-multiple'));
     Settings.moduleSettings = {
       "distance-multiple": ((Settings.getSetting('distance-multiple')) ? parseInt(Settings.getSetting('distance-multiple')) : canvas.scene.data.gridDistance) * distanceRatio, // distance multiple from settings. defaults to grid distance
       "cone-angle-multiple": (Settings.getSetting('cone-angle-multiple')) ? parseInt(Settings.getSetting('cone-angle-multiple')) : false, // multiple to snap angles for cones
@@ -101,7 +98,6 @@ export class Settings {
   }
 
   static getSetting(settingName) {
-    console.log(MODULE_NAME, settingName)
     return game.settings.get(MODULE_NAME, settingName);
   }
 }
