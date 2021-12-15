@@ -3,17 +3,19 @@
   "title": "Rounded Distance for Measured Templates",
   "description": "Rounds the distance of your measured templates the nearest multiple while you are drawing them. By default it rounds to nearest grid space.",
   "author": "shortyverrett94",
-  "url": "https://github.com/cdverrett94/rounded-distance-for-measured-templates",
-  "bugs": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/issues",
+  "url": "https://github.com/cdverrett94/FVTT-rounded-distance-for-measured-templates",
+  "bugs": "https://github.com/cdverrett94/FVTT-rounded-distance-for-measured-templates/issues",
   "version": "1.5.2",
   "minimumCoreVersion": "0.8.0",
   "compatibleCoreVersion": "9",
-  "esmodules": ["scripts/rounded-distance-for-measured-templates.js"],
+  "esmodules": [
+    "scripts/rounded-distance-for-measured-templates.js"
+  ],
   "dependencies": [
     {
       "name": "lib-wrapper"
     }
   ],
-  "manifest": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/releases/latest/download/module.json",
-  "download": "https://github.com/cdverrett94/rounded-distance-for-measured-templates/releases/latest/downlaod/package.zip"
+  "manifest": "https://github.com/cdverrett94/FVTT-rounded-distance-for-measured-templates/releases/latest/download/module.json",
+  "download": "https://github.com/cdverrett94/FVTT-rounded-distance-for-measured-templates/releases/latest/downlaod/package.zip"
 }
