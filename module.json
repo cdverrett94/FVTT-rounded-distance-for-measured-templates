@@ -5,7 +5,7 @@
   "author": "shortyverrett94",
   "url": "https://github.com/cdverrett94/FVTT-rounded-distance-for-measured-templates",
   "bugs": "https://github.com/cdverrett94/FVTT-rounded-distance-for-measured-templates/issues",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "minimumCoreVersion": "0.8.0",
   "compatibleCoreVersion": "9",
   "esmodules": [
