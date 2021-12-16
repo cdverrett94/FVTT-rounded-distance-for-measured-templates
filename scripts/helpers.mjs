@@ -2,6 +2,20 @@ import { Settings } from './settings.mjs'
 
 export const MODULE_NAME = 'rounded-distance-for-measured-templates';
 
+/**
+  Choose which rounding method to use based on setting
+
+  use_steps - should the rounding be based on steps - set in the module settings
+  number - current distance number before rounding
+*/
+export const roundDistance = (use_steps, number) => {
+  if (use_steps) {
+    return roundToStep(number);
+  } else {
+    return roundToMultiple(number, Settings.moduleSettings["distance-multiple"], Settings.moduleSettings["distance-multiple"]);
+  }
+};
+
 /*
   Rounds a number to the nearest step in the array
 
@@ -23,20 +37,6 @@ export const roundToStep = (number) => {
     return closest;
   }
 }
-
-/**
-  Choose which rounding method to use based on setting
-
-  use_steps - should the rounding be based on steps - set in the module settings
-  number - current distance number before rounding
-*/
-export const roundDistance = (use_steps, number) => {
-  if (use_steps) {
-    return roundToStep(number);
-  } else {
-    return roundToMultiple(number, Settings.moduleSettings["distance-multiple"], Settings.moduleSettings["distance-multiple"]);
-  }
-};
 
 /*
   Round a number to the nearest multiple
