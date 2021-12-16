@@ -87,12 +87,12 @@ export class Settings {
   static updateSettings() {
     let distanceRatio = canvas.dimensions.size / canvas.dimensions.distance;
     Settings.moduleSettings = {
-      "distance-multiple": ((Settings.getSetting('distance-multiple')) ? parseInt(Settings.getSetting('distance-multiple')) : canvas.scene.data.gridDistance) * distanceRatio, // distance multiple from settings. defaults to grid distance
-      "cone-angle-multiple": (Settings.getSetting('cone-angle-multiple')) ? parseInt(Settings.getSetting('cone-angle-multiple')) : false, // multiple to snap angles for cones
-      "ray-angle-multiple": (Settings.getSetting('ray-angle-multiple')) ? parseInt(Settings.getSetting('ray-angle-multiple')) : false, // multiple to snap angles for rays
+      "distance-multiple": ((Settings.getSetting('distance-multiple')) ? parseFloat(Settings.getSetting('distance-multiple')) : canvas.scene.data.gridDistance) * distanceRatio, // distance multiple from settings. defaults to grid distance
+      "cone-angle-multiple": (Settings.getSetting('cone-angle-multiple')) ? parseFloat(Settings.getSetting('cone-angle-multiple')) : false, // multiple to snap angles for cones
+      "ray-angle-multiple": (Settings.getSetting('ray-angle-multiple')) ? parseFloat(Settings.getSetting('ray-angle-multiple')) : false, // multiple to snap angles for rays
       "use-steps": Settings.getSetting('use-steps'), // use stepped distance multiples
-      "positive-steps-array": Settings.getSetting('step-array').split(",").map(x => parseInt(x) * distanceRatio).sort((first, second) => (first - second)), // steps array converted to integers and converted to pixels and sorted
-      "negative-steps-array": Settings.getSetting('step-array').split(",").map(x => parseInt(x) * distanceRatio * -1).sort((first, second) => (second - first)), // steps array converted to integers and converted to pixels and sorted
+      "positive-steps-array": Settings.getSetting('step-array').split(",").map(x => parseFloat(x) * distanceRatio).sort((first, second) => (first - second)), // steps array converted to integers and converted to pixels and sorted
+      "negative-steps-array": Settings.getSetting('step-array').split(",").map(x => parseFloat(x) * distanceRatio * -1).sort((first, second) => (second - first)), // steps array converted to integers and converted to pixels and sorted
       "use-multiple-after-steps": Settings.getSetting('use-multiple-after-steps') // use roundedDistanceSettings["distance-multiple"] after reaching highest integer from stepArray
     }
   }
