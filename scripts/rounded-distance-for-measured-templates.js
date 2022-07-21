@@ -3,10 +3,11 @@ import { Settings } from './settings.mjs';
 
 const onDragLeftMove = function (event) {
   const { destination, createState, preview, origin } = event.data;
-
   if (createState === 0) return;
+
   // Snap the destination to the grid
   event.data.destination = canvas.grid.getSnappedPosition(destination.x, destination.y, this.gridPrecision);
+
   // Compute the ray
   const ray = new Ray(origin, destination);
   const ratio = canvas.dimensions.size / canvas.dimensions.distance;
@@ -41,6 +42,7 @@ const onDragLeftMove = function (event) {
   preview.document.direction = Math.normalizeDegrees(Math.toDegrees(ray.angle));
   preview.document.distance = ray.distance / ratio;
   preview.refresh();
+
   // Confirm the creation state
   event.data.createState = 2;
 };
